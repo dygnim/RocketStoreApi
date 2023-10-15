@@ -36,6 +36,9 @@ namespace RocketStoreApi.Models
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the customer VAT number.
+        /// </summary>
         [RegularExpression("^[0-9]{9}$")]
         [DisplayName("VAT Number")]
         [JsonPropertyName("vatNumber")]

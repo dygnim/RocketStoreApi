@@ -22,7 +22,17 @@ namespace RocketStoreApi.Tests
         /// </returns>
         public virtual async Task<T> GetResponseContentAsync<T>(HttpResponseMessage response)
         {
-            string json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string json = string.Empty;
+
+            // check if the response is null
+            if (response != null)
+            {
+                json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                json = "Error: the response is null!";
+            }
 
             return JsonSerializer.Deserialize<T>(json);
         }

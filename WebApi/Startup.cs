@@ -57,7 +57,7 @@ namespace RocketStoreApi
                     },
                     assemblies: null);
 
-            services.AddSingleton<CustomersManager>();
+            services.AddScoped<CustomersManager>();
 
             services.AddSingleton<Profile, MappingProfile>();
         }

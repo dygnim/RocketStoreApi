@@ -33,8 +33,8 @@ namespace RocketStoreApi.Controllers
         [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateCustomerAsync(Customer customer)
         {
-            Result<Guid> result = this.HttpContext.RequestServices.GetRequiredService<ICustomersManager>()
-                .CreateCustomerAsync(customer);
+            Result<Guid> result = await this.HttpContext.RequestServices.GetRequiredService<ICustomersManager>()
+                .CreateCustomerAsync(customer).ConfigureAwait(true);
 
             if (result.FailedWith(ErrorCodes.CustomerAlreadyExists))
             {
