@@ -12,6 +12,17 @@ namespace RocketStoreApi.Models
         #region Public Properties
 
         /// <summary>
+        /// Gets or sets the customer identifier.
+        /// </summary>
+        [DisplayName("Id")]
+        [JsonPropertyName("id")]
+        public string Id
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the customer name.
         /// </summary>
         [Required(AllowEmptyStrings = false)]
@@ -30,7 +41,7 @@ namespace RocketStoreApi.Models
         [EmailAddress]
         [DisplayName("Email")]
         [JsonPropertyName("emailAddress")]
-        public string Email
+        public string EmailAddress
         {
             get;
             set;

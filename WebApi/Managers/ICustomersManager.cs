@@ -48,6 +48,17 @@ namespace RocketStoreApi.Managers
         /// </returns>
         Task<Result<Entities.Customer>> GetCustomerIdAsync(string id);
 
+        /// <summary>
+        /// Delete an existing customer.
+        /// </summary>
+        /// <param name=id">The id from the customer to be deleted.</param>
+        /// <returns>
+        /// The <see cref="Task{TResult}" /> that represents the asynchronous operation.
+        /// The <see cref="Result{T}" /> that describes the result.
+        /// The deletion of the customer.
+        /// </returns>
+        Task<Result<string>> DeleteCustomerAsync(string id);
+
         #endregion
     }
 }

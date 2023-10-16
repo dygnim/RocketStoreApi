@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RocketStoreApi.Controllers;
 using RocketStoreApi.Managers;
@@ -93,7 +94,7 @@ namespace RocketStoreApi.Tests
             Customer customer = new Customer()
             {
                 Name = "A customer",
-                Email = "An invalid email"
+                EmailAddress = "An invalid email"
             };
 
             // Act
@@ -129,8 +130,8 @@ namespace RocketStoreApi.Tests
             Customer customer = new Customer()
             {
                 Name = "A customer",
-                Email = "customer@server.pt",
-                VatNumber = "123456789"
+                EmailAddress = "customer@server.pt",
+                VatNumber = "abcde0123"
             };
 
             // Act
@@ -161,13 +162,13 @@ namespace RocketStoreApi.Tests
             Customer customer1 = new Customer()
             {
                 Name = "A customer",
-                Email = "customer@server.pt"
+                EmailAddress = "customer@server.pt"
             };
 
             Customer customer2 = new Customer()
             {
                 Name = "Another customer",
-                Email = "customer@server.pt"
+                EmailAddress = "customer@server.pt"
             };
 
             // Act
@@ -189,7 +190,7 @@ namespace RocketStoreApi.Tests
 
         /// <summary>
         /// Tests the <see cref="CustomersController.CreateCustomerAsync(Customer)"/> method
-        /// to ensure that it requires a valid VAT number.
+        /// to ensure that it successfully creates a new customer.
         /// </summary>
         /// <returns>
         /// The <see cref="Task"/> that represents the asynchronous operation.
@@ -202,7 +203,7 @@ namespace RocketStoreApi.Tests
             Customer customer = new Customer()
             {
                 Name = "My customer",
-                Email = "mycustomer@server.pt"
+                EmailAddress = "mycustomer@server.pt"
             };
 
             // Act

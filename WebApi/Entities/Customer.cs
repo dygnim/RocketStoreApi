@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the customer email address.
         /// </summary>
-        public string Email
+        public string EmailAddress
         {
             get;
             set;

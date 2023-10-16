@@ -44,9 +44,9 @@ namespace RocketStoreApi.Storage
 
             modelBuilder.Entity<Customer>().Property(x => x.Id);
             modelBuilder.Entity<Customer>().Property(t => t.Name).HasMaxLength(200).IsRequired();
-            modelBuilder.Entity<Customer>().Property(t => t.Email).HasMaxLength(200).IsRequired();
+            modelBuilder.Entity<Customer>().Property(t => t.EmailAddress).HasMaxLength(200).IsRequired();
             modelBuilder.Entity<Customer>().Property(t => t.VatNumber).HasMaxLength(9);
-            modelBuilder.Entity<Customer>().HasIndex(c => c.Email).IsUnique();
+            modelBuilder.Entity<Customer>().HasIndex(c => c.EmailAddress).IsUnique();
         }
 
         #endregion

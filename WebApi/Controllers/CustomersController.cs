@@ -122,6 +122,34 @@ namespace RocketStoreApi.Controllers
             return this.Accepted(result.Value);
         }
 
+        /// <summary>
+        /// Delete an existing customer.
+        /// </summary>
+        /// <param name="id">The id from the customer to be deleted.</param>
+        /// <returns>
+        /// The deletion of the customer.
+        /// </returns>
+        [HttpDelete("api/customers/{id}")]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Entities.Customer), (int)HttpStatusCode.Accepted)]
+        public async Task<IActionResult> DeleteCustomerAsync(string id)
+        {
+            Result<string> result = await this.HttpContext.RequestServices.GetRequiredService<ICustomersManager>()
+                .DeleteCustomerAsync(id).ConfigureAwait(true);
+
+            if (result.FailedWith(ErrorCodes.CustomerDoesNotExists))
+            {
+                return this.BadRequest(
+                    new ProblemDetails()
+                    {
+                        Status = (int)HttpStatusCode.InternalServerError,
+                        Title = result.ErrorCode,
+                        Detail = result.ErrorDescription
+                    });
+            }
+
+            return this.Accepted(result.Value);
+        }
         #endregion
 
         #region Private Methods

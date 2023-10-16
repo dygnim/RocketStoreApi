@@ -67,13 +67,13 @@ namespace RocketStoreApi.Managers
 
             Entities.Customer entity = this.Mapper.Map<Models.Customer, Entities.Customer>(customer);
 
-            if (this.Context.Customers.Any(i => i.Email == entity.Email))
+            if (this.Context.Customers.Any(i => i.EmailAddress == entity.EmailAddress))
             {
-                this.Logger.LogWarning($"A customer with email '{entity.Email}' already exists.");
+                this.Logger.LogWarning($"A customer with email '{entity.EmailAddress}' already exists.");
 
                 return Result<Guid>.Failure(
                     ErrorCodes.CustomerAlreadyExists,
-                    $"A customer with email '{entity.Email}' already exists.");
+                    $"A customer with email '{entity.EmailAddress}' already exists.");
             }
 
             this.Context.Customers.Add(entity);
@@ -94,7 +94,7 @@ namespace RocketStoreApi.Managers
             // Filter by name or email if provided
             if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(email))
             {
-                query = query.Where(c => c.Name.Contains(name) || c.Email.Contains(email));
+                query = query.Where(c => c.Name.Contains(name) || c.EmailAddress.Contains(email));
             }
             else
             {
@@ -105,7 +105,7 @@ namespace RocketStoreApi.Managers
 
                 if (!string.IsNullOrWhiteSpace(email))
                 {
-                    query = query.Where(c => c.Email.Contains(email));
+                    query = query.Where(c => c.EmailAddress.Contains(email));
                 }
             }
 
@@ -116,15 +116,7 @@ namespace RocketStoreApi.Managers
         /// <inheritdoc />
         public async Task<Result<Entities.Customer>> GetCustomerIdAsync(string id)
         {
-            IQueryable<Entities.Customer> query = this.Context.Customers.AsQueryable();
-
-            // Filter by name or email if provided
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                query = query.Where(c => c.Id.Equals(id));
-            }
-
-            Entities.Customer resultcustomer = await query.FirstOrDefaultAsync().ConfigureAwait(true);
+            Entities.Customer resultcustomer = await this.Context.Customers.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(true);
 
             if (resultcustomer != null) 
             {
@@ -138,6 +130,27 @@ namespace RocketStoreApi.Managers
             }
         }
 
+        /// <inheritdoc />
+        public async Task<Result<string>> DeleteCustomerAsync(string id)
+        {
+            Entities.Customer customerToDelete = await this.Context.Customers.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(true);
+
+            if (customerToDelete != null)
+            {
+                this.Context.Customers.Remove(customerToDelete);
+                this.Context.SaveChanges();
+
+                this.Logger.LogInformation($"Customer '{customerToDelete.Name}' deleted successfully.");
+
+                return Result<string>.Success($"Customer '{customerToDelete.Name}' deleted successfully.");
+            }
+            else
+            {
+                return Result<string>.Failure(
+                       ErrorCodes.CustomerDoesNotExists,
+                       $"There is no customer with Id '{id}' in the database.");
+            }
+        }
         #endregion
     }
 }
