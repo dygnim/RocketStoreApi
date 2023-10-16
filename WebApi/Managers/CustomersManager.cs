@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
+using RocketStoreApi.Entities;
+using RocketStoreApi.Models;
 using RocketStoreApi.Storage;
 
 namespace RocketStoreApi.Managers
@@ -78,6 +84,33 @@ namespace RocketStoreApi.Managers
 
             return Result<Guid>.Success(
                 new Guid(entity.Id));
+        }
+
+        /// <inheritdoc />
+        public async Task<Result<List<Entities.Customer>>> GetCustomerAsync(string name = null, string email = null)
+        {
+            IQueryable<Entities.Customer> query = this.Context.Customers.AsQueryable();
+
+            // Filter by name or email if provided
+            if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(email))
+            {
+                query = query.Where(c => c.Name.Contains(name) || c.Email.Contains(email));
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Where(c => c.Name.Contains(name));
+                }
+
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    query = query.Where(c => c.Email.Contains(email));
+                }
+            }
+
+            List<Entities.Customer> customerslist = await query.ToListAsync().ConfigureAwait(true);
+            return Result<List<Entities.Customer>>.Success(customerslist);
         }
 
         #endregion

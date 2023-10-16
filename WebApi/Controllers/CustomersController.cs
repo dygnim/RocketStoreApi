@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,36 @@ namespace RocketStoreApi.Controllers
             return this.Created(
                 this.GetUri("customers", result.Value),
                 result.Value);
+        }
+
+        /// <summary>
+        /// Gets a list of existing customers.
+        /// </summary>
+        /// <param name="name">The customer name to be filtered.</param>
+        /// <param name="email">The customer email to be filtered.</param>
+        /// <returns>
+        /// A collection with all the customers, including the identifier, name, and email address for each customer.
+        /// </returns>
+        [HttpGet("api/customers")]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(List<Entities.Customer>), (int)HttpStatusCode.Accepted)]
+        public async Task<IActionResult> GetCustomerAsync(string name = null, string email = null)
+        {
+            Result<List<Entities.Customer>> result = await this.HttpContext.RequestServices.GetRequiredService<ICustomersManager>()
+                .GetCustomerAsync(name, email).ConfigureAwait(true);
+
+            if (result.Failed)
+            {
+                return this.BadRequest(
+                    new ProblemDetails()
+                    {
+                        Status = (int)HttpStatusCode.BadRequest,
+                        Title = result.ErrorCode,
+                        Detail = result.ErrorDescription
+                    });
+            }
+
+            return this.Accepted(result.Value);
         }
 
         #endregion
