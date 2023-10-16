@@ -30,7 +30,7 @@ namespace RocketStoreApi.Models
         [EmailAddress]
         [DisplayName("Email")]
         [JsonPropertyName("emailAddress")]
-        public string EmailAddress
+        public string Email
         {
             get;
             set;
