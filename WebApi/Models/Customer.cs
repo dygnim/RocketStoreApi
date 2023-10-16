@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using RocketStoreApi.Entities;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -54,6 +55,39 @@ namespace RocketStoreApi.Models
         [DisplayName("VAT Number")]
         [JsonPropertyName("vatNumber")]
         public string VatNumber
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the customer address.
+        /// </summary>
+        [DisplayName("Address")]
+        [JsonPropertyName("address")]
+        public string Address
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the customer latitude.
+        /// </summary>
+        [DisplayName("Latitude")]
+        [JsonPropertyName("latitude")]
+        public double Latitude
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the customer longitude.
+        /// </summary>
+        [DisplayName("Longitude")]
+        [JsonPropertyName("longitude")]
+        public double Longitude
         {
             get;
             set;

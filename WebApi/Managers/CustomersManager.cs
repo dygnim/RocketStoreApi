@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using RocketStoreApi.Entities;
-using RocketStoreApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RocketStoreApi.Storage;
 
 namespace RocketStoreApi.Managers
@@ -120,6 +119,35 @@ namespace RocketStoreApi.Managers
 
             if (resultcustomer != null) 
             {
+                if (!string.IsNullOrWhiteSpace(resultcustomer.Address))
+                {
+                    string baseUrl = "http://api.positionstack.com/v1/forward";
+                    string accessKey = "15d47496f789474651c34c3f64ee13dd";
+                    string query = Uri.EscapeDataString(resultcustomer.Address);
+                    Uri fullUrl = new Uri($"{baseUrl}?access_key={accessKey}&query={query}");
+
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        try
+                        {
+                            HttpResponseMessage response = await httpClient.GetAsync(fullUrl).ConfigureAwait(false);
+                            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var objectjson = JsonConvert.DeserializeObject<JToken>(content);
+
+                                // Could not finish the code because I couldn't make the Positionstack API to provide data (even in their website I couldn't test the API from their own URI)
+                                // At this point I should get the latitude and longitude information from the external API based on resultcustomer.Address
+                                // and with those values I should update resultcustomer.Latitude and resultcustomer.Longitude
+                            }
+                        }
+                        catch (HttpRequestException e)
+                        {
+                        }
+                    }
+                }
+
                 return Result<Entities.Customer>.Success(resultcustomer);
             }
             else
