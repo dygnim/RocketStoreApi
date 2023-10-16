@@ -37,6 +37,17 @@ namespace RocketStoreApi.Managers
         /// </returns>
         Task<Result<List<Entities.Customer>>> GetCustomerAsync(string name = null, string email = null);
 
+        /// <summary>
+        /// Retrieve a single existing customer.
+        /// </summary>
+        /// <param name=id">The id from the customer to be retrieved.</param>
+        /// <returns>
+        /// The <see cref="Task{TResult}" /> that represents the asynchronous operation.
+        /// The <see cref="Result{T}" /> that describes the result.
+        /// All the information available for the customer.
+        /// </returns>
+        Task<Result<Entities.Customer>> GetCustomerIdAsync(string id);
+
         #endregion
     }
 }

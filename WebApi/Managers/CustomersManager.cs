@@ -113,6 +113,31 @@ namespace RocketStoreApi.Managers
             return Result<List<Entities.Customer>>.Success(customerslist);
         }
 
+        /// <inheritdoc />
+        public async Task<Result<Entities.Customer>> GetCustomerIdAsync(string id)
+        {
+            IQueryable<Entities.Customer> query = this.Context.Customers.AsQueryable();
+
+            // Filter by name or email if provided
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                query = query.Where(c => c.Id.Equals(id));
+            }
+
+            Entities.Customer resultcustomer = await query.FirstOrDefaultAsync().ConfigureAwait(true);
+
+            if (resultcustomer != null) 
+            {
+                return Result<Entities.Customer>.Success(resultcustomer);
+            }
+            else
+            {
+                return Result<Entities.Customer>.Failure(
+                       ErrorCodes.CustomerDoesNotExists,
+                       $"There is no customer with Id '{id}' in the database.");
+            }
+        }
+
         #endregion
     }
 }

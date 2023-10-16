@@ -93,6 +93,35 @@ namespace RocketStoreApi.Controllers
             return this.Accepted(result.Value);
         }
 
+        /// <summary>
+        /// Retrieve a single existing customer.
+        /// </summary>
+        /// <param name="id">The id from the customer to be retrieved.</param>
+        /// <returns>
+        /// All the information available for the customer.
+        /// </returns>
+        [HttpGet("api/customers/{id}")]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Entities.Customer), (int)HttpStatusCode.Accepted)]
+        public async Task<IActionResult> GetCustomerIdAsync(string id)
+        {
+            Result<Entities.Customer> result = await this.HttpContext.RequestServices.GetRequiredService<ICustomersManager>()
+                .GetCustomerIdAsync(id).ConfigureAwait(true);
+
+            if (result.FailedWith(ErrorCodes.CustomerDoesNotExists))
+            {
+                return this.BadRequest(
+                    new ProblemDetails()
+                    {
+                        Status = (int)HttpStatusCode.InternalServerError,
+                        Title = result.ErrorCode,
+                        Detail = result.ErrorDescription
+                    });
+            }
+
+            return this.Accepted(result.Value);
+        }
+
         #endregion
 
         #region Private Methods

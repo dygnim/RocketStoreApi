@@ -12,6 +12,11 @@
         /// </summary>
         public const string CustomerAlreadyExists = "CustomerAlreadyExists";
 
+        /// <summary>
+        /// The customer does not exist.
+        /// </summary>
+        public const string CustomerDoesNotExists = "CustomerDoesNotExists";
+
         #endregion
     }
 }
